@@ -6,7 +6,7 @@ import { Sparkles, Mail, ShoppingCart } from "lucide-react";
 
 export default function PerfilHeader() {
   const user = useUserStore((state) => state.user);
-  const cart = useCartStore((state) => state.cart);
+  const cart = useCartStore((state) => state.items);
   const cartCount = cart.length;;
 
   if (!user) return null;

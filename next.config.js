@@ -8,7 +8,6 @@ const nextConfig = {
   // Configuración experimental para Next.js 15
   experimental: {
     optimizePackageImports: ['lucide-react', '@radix-ui/react-icons'],
-    serverComponentsExternalPackages: ['leaflet', 'react-leaflet'],
   },
   
   // Configuración de imágenes optimizada para Strapi
@@ -31,6 +30,12 @@ const nextConfig = {
         hostname: 'images.unsplash.com',
         port: '',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'unpkg.com',
+        port: '',
+        pathname: '/leaflet@1.9.4/dist/images/**',
       },
     ],
     formats: ['image/webp', 'image/avif'],
@@ -126,23 +131,11 @@ const nextConfig = {
       };
     }
 
-    // Optimización para leaflet
-    config.module.rules.push({
-      test: /\.js$/,
-      include: /node_modules\/leaflet/,
-      use: {
-        loader: 'babel-loader',
-        options: {
-          presets: ['next/babel'],
-        },
-      },
-    });
 
     return config;
   },
 
   // Configuración de output para Vercel
-  output: 'standalone',
   compress: true,
   trailingSlash: false,
   

@@ -15,7 +15,7 @@ interface Props {
 
 const FeaturedProductCard = ({ product }: Props) => {
   const router = useRouter();
-  const addToCart = useCartStore((state) => state.addToCart);
+  const addToCart = useCartStore((state) => state.addItem);
   const [expanded, setExpanded] = useState(false);
 
   const unidad = product.unidadMedida?.trim().toLowerCase() || "";

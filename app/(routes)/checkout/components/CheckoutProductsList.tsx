@@ -13,9 +13,9 @@ const formatQuantity = (qty: number, unidad: string) => {
 };
 
 export default function CheckoutProductsList() {
-  const cart = useCartStore((state) => state.cart);
+  const cart = useCartStore((state) => state.items);
   const updateQuantity = useCartStore((state) => state.updateQuantity);
-  const removeFromCart = useCartStore((state) => state.removeFromCart);
+  const removeFromCart = useCartStore((state) => state.removeItem);
 
   const increment = (id: number, qty: number, unidad: string) => {
     const step = unidad === "kg" ? 0.25 : 1;

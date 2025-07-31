@@ -16,8 +16,8 @@ const formatQuantity = (qty: number, unidad: string) => {
 
 export default function CartPage() {
   const router = useRouter();
-  const cart = useCartStore((state) => state.cart);
-  const removeFromCart = useCartStore((state) => state.removeFromCart);
+  const cart = useCartStore((state) => state.items);
+  const removeFromCart = useCartStore((state) => state.removeItem);
   const updateQuantity = useCartStore((state) => state.updateQuantity);
   const clearCart = useCartStore((state) => state.clearCart);
   const getTotalPrice = useCartStore((state) => state.getTotalPrice);

@@ -16,7 +16,7 @@ export default function Navbar() {
   const { isOpen, toggleMenu, closeMenu } = useToggleMenu();
 
   const user = useUserStore((state) => state.user);
-  const cart = useCartStore((state) => state.cart);
+  const cart = useCartStore((state) => state.items);
   const itemCount = cart.length; 
   return (
     <header className="sticky top-0 left-0 w-full flex items-center justify-between py-3 md:py-0 md:px-5 shadow-md z-50 navbar-secondary bg-white/90 backdrop-blur-sm">

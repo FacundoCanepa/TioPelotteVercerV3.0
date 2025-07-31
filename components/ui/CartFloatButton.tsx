@@ -9,7 +9,7 @@ import { usePathname, useRouter } from "next/navigation";
  * Componente cliente para manejo de estado
  */
 export default function CartFloatButton() {
-  const { cart } = useCartStore();
+  const cart = useCartStore((state) => state.items);
   const router = useRouter();
   const pathname = usePathname();
 

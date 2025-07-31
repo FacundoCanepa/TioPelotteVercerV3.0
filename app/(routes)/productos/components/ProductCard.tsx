@@ -14,7 +14,7 @@ interface Props {
 
 export default function ProductCard({ product }: Props) {
   const router = useRouter();
-  const addToCart = useCartStore((state) => state.addToCart);
+  const addToCart = useCartStore((state) => state.addItem);
   
   const [quantity, setQuantity] = useState(1);
   const [isAddingToCart, setIsAddingToCart] = useState(false);

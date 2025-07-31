@@ -16,7 +16,7 @@ interface Props {
 
 const ProductGridCard = ({ product, priority = false, layout = 'grid' }: Props) => {
   const router = useRouter();
-  const addToCart = useCartStore((state) => state.addToCart);
+  const addToCart = useCartStore((state) => state.addItem);
 
   if (!product?.productName || !product?.id) {
     console.warn('⚠️ ProductGridCard recibió un producto inválido:', product);

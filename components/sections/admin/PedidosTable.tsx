@@ -54,6 +54,8 @@ export default function PedidosTable({ pedidos }: Props) {
       if (!res.ok) throw new Error(json.error?.message || "Error al actualizar");
 
       toast.success("Estado actualizado con éxito");
+      // Refresh the page to show updated data
+      window.location.reload();
     } catch (err: any) {
       toast.error("No se pudo actualizar el estado");
       console.error(err);

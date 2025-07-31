@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/pedidos?filters[payment_id][$eq]=${payment_id}`,
       {
         headers: {
-          Authorization: `Bearer ${process.env.API_TOKEN}`,
+          Authorization: `Bearer ${process.env.STRAPI_API_TOKEN}`,
         },
       }
     );
@@ -67,7 +67,7 @@ export async function POST(req: NextRequest) {
       {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${process.env.API_TOKEN}`,
+          Authorization: `Bearer ${process.env.STRAPI_API_TOKEN}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(payload),
@@ -78,6 +78,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ status: "ok", pedidoId: result?.data?.id });
   } catch (err) {
+    console.error("Error en verificar-pago:", err);
     return NextResponse.json({ error: "Error interno" }, { status: 500 });
   }
 }

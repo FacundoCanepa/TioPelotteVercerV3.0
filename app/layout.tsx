@@ -75,7 +75,6 @@ export default function RootLayout({
         <meta name="geo.placename" content="La Plata, Buenos Aires" />
         <meta name="theme-color" content="#FBE6D4" />
         <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="apple-touch-icon" href="/icon-192.png" />
       </head>
       
       <body 
@@ -107,7 +106,6 @@ export default function RootLayout({
             <ScrollToTop />
             <CartFloatButton />
             <WhatsAppButton />
-            <PWAPrompt />
             
             {/* Sistema de notificaciones */}
             <Toaster 

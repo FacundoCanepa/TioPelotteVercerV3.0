@@ -39,7 +39,7 @@ export interface CartStore {
   };
 
   // Acciones del carrito
-  addItem: (product: ProductType, quantity: number) => void;
+  addItem: (product: ProductType, quantity?: number) => void;
   removeItem: (productId: number) => void;
   updateQuantity: (productId: number, quantity: number) => void;
   clearCart: () => void;
@@ -101,7 +101,7 @@ export const useCartStore = create<CartStore>()(
       },
 
       // Agregar producto al carrito
-      addItem: (product, quantity) => {
+      addItem: (product, quantity = 1) => {
         try {
           set({ isLoading: true });
           

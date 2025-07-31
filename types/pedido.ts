@@ -10,6 +10,8 @@ export type PedidoType = {
   direccion: string;
   referencias?: string;
   telefono?: string;
-  nombreApellido?: string;
+  nombre?: string;
   createdAt: string;
+  tipoEntrega?: string;
+  tipoPago?: string;
 };

@@ -22,7 +22,7 @@ interface Props {
 }
 
 const ProductDetail = ({ product }: Props) => {
-  const addToCart = useCartStore((state) => state.addToCart);
+  const addToCart = useCartStore((state) => state.addItem);
 
   const unidad = product.unidadMedida?.trim().toLowerCase();
   const isKg = unidad === "kg";

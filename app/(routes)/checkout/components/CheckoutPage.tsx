@@ -9,7 +9,6 @@ import { User, Phone } from "lucide-react";
 import CheckoutProductsList from "./CheckoutProductsList";
 import CheckoutResumen from "./CheckoutResumen";
 import CheckoutDeliverySelector from "./CheckoutDeliverySelector";
-import CheckoutForm from "./CheckoutForm";
 import dynamic from "next/dynamic";
 const CheckoutDeliveryMap = dynamic(() => import("./CheckoutDeliveryMap"), { ssr: false });
 import CheckoutPaymentMethod from "./CheckoutPaymentMethod";
@@ -19,32 +18,44 @@ import { useGoogleAnalytics } from "@/hooks/useGoogleAnalytics";
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const cart = useCartStore((state) => state.cart);
+  const cart = useCartStore((state) => state.items);
   const clearCart = useCartStore((state) => state.clearCart);
   const getTotalPrice = useCartStore((state) => state.getTotalPrice);
 
-  const tipoEntrega = useCartStore((state) => state.tipoEntrega);
-  const setTipoEntrega = useCartStore((state) => state.setTipoEntrega);
+  const tipoEntrega = useCartStore((state) => state.deliveryInfo.type);
+  const setTipoEntrega = (type: "delivery" | "pickup") => {
+    useCartStore.getState().setDeliveryInfo({ type });
+  };
 
-  const zona = useCartStore((state) => state.zona);
-  const setZona = useCartStore((state) => state.setZona);
+  const zona = useCartStore((state) => state.deliveryInfo.zone || "");
+  const setZona = (zone: string) => {
+    useCartStore.getState().setDeliveryInfo({ zone });
+  };
 
-  const direccion = useCartStore((state) => state.direccion);
-  const setDireccion = useCartStore((state) => state.setDireccion);
+  const direccion = useCartStore((state) => state.deliveryInfo.address || "");
+  const setDireccion = (address: string) => {
+    useCartStore.getState().setDeliveryInfo({ address });
+  };
 
-  const referencias = useCartStore((state) => state.referencias);
-  const setReferencias = useCartStore((state) => state.setReferencias);
+  const referencias = useCartStore((state) => state.deliveryInfo.notes || "");
+  const setReferencias = (notes: string) => {
+    useCartStore.getState().setDeliveryInfo({ notes });
+  };
 
-  const tipoPago = useCartStore((state) => state.tipoPago);
-  const setTipoPago = useCartStore((state) => state.setTipoPago);
+  const tipoPago = useCartStore((state) => state.paymentInfo.method);
+  const setTipoPago = (method: "mercadopago" | "cash" | "pending") => {
+    useCartStore.getState().setPaymentInfo({ method });
+  };
 
-  const setTotal = useCartStore((state) => state.setTotal);
+  const nombre = useCartStore((state) => state.customerInfo.name);
+  const setNombre = (name: string) => {
+    useCartStore.getState().setCustomerInfo({ name });
+  };
 
-  const setNombre = useCartStore((state) => state.setNombre);
-  const nombre = useCartStore((state) => state.nombre);
-
-  const telefono = useCartStore((state) => state.telefono);
-  const setTelefono = useCartStore((state) => state.setTelefono);
+  const telefono = useCartStore((state) => state.customerInfo.phone);
+  const setTelefono = (phone: string) => {
+    useCartStore.getState().setCustomerInfo({ phone });
+  };
 
   const user = useUserStore((state) => state.user);
   const { trackBeginCheckout } = useGoogleAnalytics();
@@ -73,15 +84,13 @@ export default function CheckoutPage() {
   }, [user]);
 
   const totalProductos = getTotalPrice();
-  const zonaSeleccionada = tipoEntrega === "domicilio" ? zonas.find((z) => z.nombre === zona) : null;
+  const zonaSeleccionada = tipoEntrega === "delivery" ? zonas.find((z) => z.nombre === zona) : null;
   const costoEnvio = zonaSeleccionada
     ? parseInt(zonaSeleccionada.precio.replace(/[$.]/g, ""))
     : 0;
   const totalGeneral = totalProductos + costoEnvio;
 
   useEffect(() => {
-    setTotal(totalGeneral);
-    
     // Track begin checkout when cart changes
     if (cart.length > 0) {
       const items = cart.map(item => ({
@@ -94,12 +103,12 @@ export default function CheckoutPage() {
       
       trackBeginCheckout(items, totalGeneral);
     }
-  }, [totalGeneral]);
+  }, [totalGeneral, cart, trackBeginCheckout]);
     const handleConfirmRetiro = async () => {
 
       const payload = {
         items: cart.map((item) => ({
-        title: `${item.product.productName} · ${item.quantity} ${item.product.unidadMedida}`,
+          title: `${item.product.productName} · ${item.quantity} ${item.product.unidadMedida}`,
           quantity: 1,
           unit_price: Math.round(item.quantity * item.product.price),
           product_name: item.product.productName,
@@ -111,8 +120,8 @@ export default function CheckoutPage() {
         referencias,
         telefono,
         nombre,
-        tipoEntrega: "local",
-        tipoPago: "Elegís al momento de pagar",
+        tipoEntrega: "pickup",
+        tipoPago: "pending",
       };
 
 
@@ -202,7 +211,7 @@ export default function CheckoutPage() {
             subtotal={totalProductos}
             envio={costoEnvio}
             total={totalGeneral}
-            metodoPago={tipoPago}
+            metodoPago={tipoPago === "mercadopago" ? "mercado pago" : tipoPago === "cash" ? "efectivo" : "mercado pago"}
           />
         </div>
 
@@ -238,21 +247,14 @@ export default function CheckoutPage() {
               {telefonoError && <p className="text-red-600 text-sm">Solo se permiten números sin espacios</p>}
             </div>
 
-            <CheckoutDeliverySelector tipoEntrega={tipoEntrega} setTipoEntrega={setTipoEntrega} />
+            <CheckoutDeliverySelector 
+              tipoEntrega={tipoEntrega === "delivery" ? "domicilio" : "local"} 
+              setTipoEntrega={(val) => setTipoEntrega(val === "domicilio" ? "delivery" : "pickup")} 
+            />
 
-            {tipoEntrega === "domicilio" ? (
+            {tipoEntrega === "delivery" ? (
               <CheckoutDeliveryMap
-                tipoEntrega={tipoEntrega}
-                zona={zona}
-                setZona={setZona}
-                direccion={direccion}
-                setDireccion={setDireccion}
-                referencias={referencias}
-                setReferencias={setReferencias}
-              />
-            ) : (
-              <CheckoutForm
-                tipoEntrega={tipoEntrega}
+                tipoEntrega={tipoEntrega === "delivery" ? "domicilio" : "local"}
                 zona={zona}
                 setZona={setZona}
                 direccion={direccion}
@@ -262,15 +264,18 @@ export default function CheckoutPage() {
               />
             )}
 
-            {tipoEntrega === "domicilio" && (
-              <CheckoutPaymentMethod metodoPago={tipoPago} setMetodoPago={setTipoPago} />
+            {tipoEntrega === "delivery" && (
+              <CheckoutPaymentMethod 
+                metodoPago={tipoPago === "mercadopago" ? "mercado pago" : "efectivo"} 
+                setMetodoPago={(val) => setTipoPago(val === "mercado pago" ? "mercadopago" : "cash")} 
+              />
             )}
 
             {error && <p className="text-red-600 text-sm">{error}</p>}
 
-            {tipoEntrega === "domicilio" ? (
+            {tipoEntrega === "delivery" ? (
               camposCompletos ? (
-                <MercadoPagoButton total={tipoPago === "efectivo" ? Math.round(totalGeneral * 0.1) : totalGeneral} />
+                <MercadoPagoButton total={tipoPago === "cash" ? Math.round(totalGeneral * 0.1) : totalGeneral} />
               ) : (
                 <button
                   type="button"

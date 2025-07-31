@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { MercadoPagoConfig, Preference } from "mercadopago";
-import { apiCall } from "@/lib/api";
 
 // Validate environment variables
 if (!process.env.MP_ACCESS_TOKEN) {
@@ -42,7 +41,7 @@ export async function POST(req: Request) {
     }
 
     const itemsProcesados = items.map((item: any) => {
-      const precio = tipoPago === "efectivo"
+      const precio = tipoPago === "cash"
         ? Math.round(item.unit_price * 0.1)
         : item.unit_price;
 
