@@ -2,7 +2,6 @@
 const nextConfig = {
   // Configuración básica optimizada para producción
   reactStrictMode: true,
-  swcMinify: true,
   poweredByHeader: false,
   
   // Configuración experimental para Next.js 15

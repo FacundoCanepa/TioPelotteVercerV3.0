@@ -1,4 +1,6 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 /* Animaciones CSS personalizadas para reemplazar framer-motion */
 @keyframes slide-in-from-top {
