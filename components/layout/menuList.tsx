@@ -6,7 +6,7 @@ import {
   ShoppingBag,
   Percent,
   ScrollText,
-  Logs,
+  FileText,
   LayoutDashboard,
 } from "lucide-react";
 
@@ -23,7 +23,7 @@ const links = [
   { text: "Ubicación", href: "/ubicacion", icon: MapPin },
   { text: "Recetas", href: "/recetas", icon: Percent },
   { text: "Nuestra historia", href: "/historia", icon: ScrollText },
-  { text: "Consultar pedido", href: "/consultarPedido", icon: Logs },
+  { text: "Consultar pedido", href: "/consultarPedido", icon: FileText },
 ];
 
 const MenuList = ({ isOpen, closeMenu }: MenuListProps) => {
